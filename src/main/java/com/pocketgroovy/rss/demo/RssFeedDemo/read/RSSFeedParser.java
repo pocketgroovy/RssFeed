@@ -2,11 +2,6 @@ package com.pocketgroovy.rss.demo.RssFeedDemo.read;
 
 import com.pocketgroovy.rss.demo.RssFeedDemo.model.Feed;
 import com.pocketgroovy.rss.demo.RssFeedDemo.model.FeedMessage;
-import org.springframework.batch.item.ItemReader;
-import org.springframework.batch.item.NonTransientResourceException;
-import org.springframework.batch.item.ParseException;
-import org.springframework.batch.item.UnexpectedInputException;
-import org.springframework.batch.item.xml.builder.StaxEventItemReaderBuilder;
 
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
@@ -115,7 +110,7 @@ public class RSSFeedParser  {
                         message.setLink(link);
                         message.setTitle(title);
                         assert feed != null;
-                        feed.getMessages().add(message);
+                        feed.setMessages(message);
 //                        event = eventReader.nextEvent();
 //                        continue;
                     }

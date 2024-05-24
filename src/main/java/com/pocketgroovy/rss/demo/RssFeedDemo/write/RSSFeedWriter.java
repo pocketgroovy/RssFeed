@@ -17,8 +17,8 @@ import javax.xml.stream.events.XMLEvent;
 
 
 public class RSSFeedWriter {
-    private String outputFile;
-    private Feed rssfeed;
+    private final String outputFile;
+    private final Feed rssfeed;
 
     public RSSFeedWriter(Feed rssfeed, String outputFile) {
         this.rssfeed = rssfeed;

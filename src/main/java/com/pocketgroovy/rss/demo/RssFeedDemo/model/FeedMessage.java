@@ -1,15 +1,42 @@
 package com.pocketgroovy.rss.demo.RssFeedDemo.model;
 
+import jakarta.persistence.*;
+
+import java.util.Objects;
+
 /*
  * RSS message model
  */
+@Entity
+@Table(name = "feedmessage")
 public class FeedMessage {
 
-    String title;
-    String description;
-    String link;
-    String author;
-    String guid;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "title")
+    private String title;
+
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "link")
+    private String link;
+
+    @Column(name = "author")
+    private String author;
+
+    @Column(name = "guid")
+    private String guid;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "feed_id")
+    private Feed feed;
+
+    public void setFeed(Feed feed){
+        this.feed = feed;
+    }
 
     public String getTitle() {
         return title;
@@ -49,6 +76,19 @@ public class FeedMessage {
 
     public void setGuid(String guid) {
         this.guid = guid;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FeedMessage that = (FeedMessage) o;
+        return Objects.equals(getTitle(), that.getTitle()) && Objects.equals(getDescription(), that.getDescription()) && Objects.equals(getLink(), that.getLink()) && Objects.equals(getAuthor(), that.getAuthor()) && Objects.equals(getGuid(), that.getGuid()) && Objects.equals(id, that.id) && Objects.equals(feed, that.feed);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getTitle(), getDescription(), getLink(), getAuthor(), getGuid(), id, feed);
     }
 
     @Override
