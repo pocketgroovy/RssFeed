@@ -1,11 +1,13 @@
 package com.pocketgroovy.rss.demo.RssFeedDemo.service;
 
-import com.pocketgroovy.rss.demo.RssFeedDemo.model.Feed;
 import com.pocketgroovy.rss.demo.RssFeedDemo.model.FeedMessage;
 import com.pocketgroovy.rss.demo.RssFeedDemo.repository.IFeedMessageRepository;
-import com.pocketgroovy.rss.demo.RssFeedDemo.repository.IFeedRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -22,11 +24,11 @@ public class FeedMessageService {
         return feedMessageRepository.count() >= 0;
     }
 
-    public FeedMessage addFeedMessage(FeedMessage feedMessage){
+    public FeedMessage addFeedMessage(FeedMessage feedMessage) {
         return feedMessageRepository.save(feedMessage);
     }
 
-    public void addAllFeedMessages(List<FeedMessage> feedMessages){
+    public void addAllFeedMessages(List<FeedMessage> feedMessages) {
         feedMessageRepository.saveAll(feedMessages);
     }
 
@@ -34,7 +36,9 @@ public class FeedMessageService {
         return feedMessageRepository.findById(id);
     }
 
-    public List<FeedMessage> getFeedMessagesByFeedId(long id) {
-        return feedMessageRepository.findAllFeedMessageByFeedId(id);
+    public List<FeedMessage> getFeedMessagesListByFeedId(long id, int page, int size, String sortDir, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.fromString(sortDir), sort);
+        Page<FeedMessage> feedMessages = feedMessageRepository.findAllFeedMessageByFeedId(id, pageable);
+        return feedMessages.getContent();
     }
 }

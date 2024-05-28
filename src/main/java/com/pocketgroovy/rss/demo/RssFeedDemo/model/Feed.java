@@ -1,6 +1,9 @@
 package com.pocketgroovy.rss.demo.RssFeedDemo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,12 +12,11 @@ import java.util.Objects;
 /*
  * Stores an RSS feed
  */
+@Getter
+@Setter
 @Entity
 @Table(name = "feed")
-public class Feed {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Feed extends BaseEntity {
 
     @Column(name = "title")
     private String title;
@@ -34,6 +36,7 @@ public class Feed {
     @Column(name = "pubDate")
     private String pubDate;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "feed")
     private List<FeedMessage> entries = new ArrayList<FeedMessage>();
 
@@ -68,45 +71,18 @@ public class Feed {
         feedMessage.setFeed(this);
         entries.add(feedMessage);
     }
-//    public void setFeedMessages(List<FeedMessage> entries) {
-//        this.entries = entries;
-//    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getLink() {
-        return link;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public String getCopyright() {
-        return copyright;
-    }
-
-    public String getPubDate() {
-        return pubDate;
-    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Feed feed = (Feed) o;
-        return Objects.equals(id, feed.id) && Objects.equals(getTitle(), feed.getTitle()) && Objects.equals(getLink(), feed.getLink()) && Objects.equals(getDescription(), feed.getDescription()) && Objects.equals(getLanguage(), feed.getLanguage()) && Objects.equals(getCopyright(), feed.getCopyright()) && Objects.equals(getPubDate(), feed.getPubDate()) && Objects.equals(getMessages(), feed.getMessages());
+        return Objects.equals(getId(), feed.getId()) && Objects.equals(getTitle(), feed.getTitle()) && Objects.equals(getLink(), feed.getLink()) && Objects.equals(getDescription(), feed.getDescription()) && Objects.equals(getLanguage(), feed.getLanguage()) && Objects.equals(getCopyright(), feed.getCopyright()) && Objects.equals(getPubDate(), feed.getPubDate()) && Objects.equals(getMessages(), feed.getMessages());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, getTitle(), getLink(), getDescription(), getLanguage(), getCopyright(), getPubDate(), getMessages());
+        return Objects.hash(getId(), getTitle(), getLink(), getDescription(), getLanguage(), getCopyright(), getPubDate(), getMessages());
     }
 
     @Override

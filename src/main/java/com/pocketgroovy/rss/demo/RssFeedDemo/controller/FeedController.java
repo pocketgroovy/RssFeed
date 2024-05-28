@@ -1,35 +1,32 @@
 package com.pocketgroovy.rss.demo.RssFeedDemo.controller;
 
-import com.pocketgroovy.rss.demo.RssFeedDemo.exception.FeedNotFoundException;
+import com.pocketgroovy.rss.demo.RssFeedDemo.dto.FeedDTO;
+import com.pocketgroovy.rss.demo.RssFeedDemo.dto.FeedMessageDTO;
 import com.pocketgroovy.rss.demo.RssFeedDemo.model.Feed;
 import com.pocketgroovy.rss.demo.RssFeedDemo.model.FeedMessage;
 import com.pocketgroovy.rss.demo.RssFeedDemo.read.RSSFeedParser;
 import com.pocketgroovy.rss.demo.RssFeedDemo.service.FeedMessageService;
 import com.pocketgroovy.rss.demo.RssFeedDemo.service.FeedService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/feed")
+@RequestMapping("/api/v1/rss")
 public class FeedController {
 
-    private final FeedService feedService;
-    private final FeedMessageService feedMessageService;
-
-    public FeedController(FeedService feedService, FeedMessageService feedMessageService){
-        this.feedService = feedService;
-        this.feedMessageService = feedMessageService;
-    }
+    @Autowired
+    private FeedService feedService;
+    @Autowired
+    private FeedMessageService feedMessageService;
+    @Autowired
+    private ModelMapper modelMapper;
 
     @GetMapping("/add_feeds")
-    public void addFeed(){
+    public void addFeed() {
         RSSFeedParser parser = new RSSFeedParser(
                 "https://rss.nytimes.com/services/xml/rss/nyt/World.xml");
         Feed feed = parser.readFeed();
@@ -38,18 +35,28 @@ public class FeedController {
     }
 
     @GetMapping("/get_feed/{id}")
-    public Feed getFeed(@PathVariable long id){
-        return feedService.getFeed(id).orElseThrow(() -> new FeedNotFoundException("the feed was not found"));
+    public FeedDTO getFeed(@PathVariable long id) {
+        return convertFeedToDTO(feedService.getFeed(id));
     }
 
     @GetMapping("/get_message/{messageId}")
-    public Optional<FeedMessage> getFeedMessage(@PathVariable long messageId) {
-        return feedMessageService.getFeedMessage(messageId);
+    public FeedMessageDTO getFeedMessage(@PathVariable long messageId) {
+        return convertFeedMessageToDTO(feedMessageService.getFeedMessage(messageId));
     }
 
     @GetMapping("/get_all_messages_by_id/{feedId}")
-    public List<FeedMessage> getFeedMessages(@PathVariable long feedId) {
-        return feedMessageService.getFeedMessagesByFeedId(feedId);
+    public List<FeedMessage> getFeedMessages(@PathVariable long feedId, @RequestParam(defaultValue = "0") int pageNo,
+                                             @RequestParam(defaultValue = "5") int pageSize,
+                                             @RequestParam(defaultValue = "DESC") String sortDirection,
+                                             @RequestParam(defaultValue = "id") String sortBy) {
+        return feedMessageService.getFeedMessagesListByFeedId(feedId, pageNo, pageSize, sortDirection, sortBy);
     }
 
+    private FeedDTO convertFeedToDTO(Optional<Feed> feed) {
+        return modelMapper.map(feed, FeedDTO.class);
+    }
+
+    private FeedMessageDTO convertFeedMessageToDTO(Optional<FeedMessage> feedMessage) {
+        return modelMapper.map(feedMessage, FeedMessageDTO.class);
+    }
 }

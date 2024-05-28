@@ -1,19 +1,20 @@
 package com.pocketgroovy.rss.demo.RssFeedDemo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Objects;
 
 /*
  * RSS message model
  */
+@Getter
+@Setter
 @Entity
 @Table(name = "feedmessage")
-public class FeedMessage {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class FeedMessage extends BaseEntity{
 
     @Column(name = "title")
     private String title;
@@ -30,65 +31,22 @@ public class FeedMessage {
     @Column(name = "guid")
     private String guid;
 
+    @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "feed_id")
     private Feed feed;
-
-    public void setFeed(Feed feed){
-        this.feed = feed;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getLink() {
-        return link;
-    }
-
-    public void setLink(String link) {
-        this.link = link;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public String getGuid() {
-        return guid;
-    }
-
-    public void setGuid(String guid) {
-        this.guid = guid;
-    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FeedMessage that = (FeedMessage) o;
-        return Objects.equals(getTitle(), that.getTitle()) && Objects.equals(getDescription(), that.getDescription()) && Objects.equals(getLink(), that.getLink()) && Objects.equals(getAuthor(), that.getAuthor()) && Objects.equals(getGuid(), that.getGuid()) && Objects.equals(id, that.id) && Objects.equals(feed, that.feed);
+        return Objects.equals(getTitle(), that.getTitle()) && Objects.equals(getDescription(), that.getDescription()) && Objects.equals(getLink(), that.getLink()) && Objects.equals(getAuthor(), that.getAuthor()) && Objects.equals(getGuid(), that.getGuid()) && Objects.equals(getId(), that.getId()) && Objects.equals(feed, that.feed);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getTitle(), getDescription(), getLink(), getAuthor(), getGuid(), id, feed);
+        return Objects.hash(getTitle(), getDescription(), getLink(), getAuthor(), getGuid(), getId(), feed);
     }
 
     @Override

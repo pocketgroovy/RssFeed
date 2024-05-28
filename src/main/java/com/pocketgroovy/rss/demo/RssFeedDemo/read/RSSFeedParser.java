@@ -14,7 +14,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Objects;
 
-//public class RSSFeedParser implements ItemReader<Feed> {
 public class RSSFeedParser  {
     static final String TITLE = "title";
     static final String DESCRIPTION = "description";
@@ -37,9 +36,6 @@ public class RSSFeedParser  {
         }
     }
 
-//    public InputStream read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
-//        return readUrl();
-//    }
     public Feed readFeed() {
         Feed feed = null;
         try {
