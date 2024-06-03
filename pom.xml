@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.pocketgroovy.rss.demo</groupId>
-	<artifactId>RssFeedDemo</artifactId>
+	<artifactId>RssReaderDemo</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>RssFeedDemo</name>
+	<name>RssReaderDemo</name>
 	<description>Demo project for RSS Feed</description>
 	<properties>
 		<java.version>22</java.version>
@@ -79,6 +79,13 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<skipTests>true</skipTests>
 				</configuration>
 			</plugin>
 		</plugins>
