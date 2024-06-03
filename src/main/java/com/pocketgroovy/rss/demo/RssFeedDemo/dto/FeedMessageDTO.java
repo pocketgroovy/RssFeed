@@ -8,6 +8,8 @@ import lombok.Setter;
 public class FeedMessageDTO {
     private Long id;
 
+    private String pubId;
+
     private String title;
 
     private String description;
@@ -17,4 +19,6 @@ public class FeedMessageDTO {
     private String author;
 
     private String guid;
+
+    private String pubDate;
 }

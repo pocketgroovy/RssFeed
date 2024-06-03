@@ -8,6 +8,8 @@ import lombok.Setter;
 public class FeedDTO {
     private Long id;
 
+    private String pubId;
+
     private String title;
 
     private String link;

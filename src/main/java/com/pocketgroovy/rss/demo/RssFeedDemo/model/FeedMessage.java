@@ -31,6 +31,12 @@ public class FeedMessage extends BaseEntity{
     @Column(name = "guid")
     private String guid;
 
+    @Column(name = "pubDate")
+    private String pubDate;
+
+    @Column(name = "pubId")
+    private String pubId;
+
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "feed_id")
@@ -41,19 +47,19 @@ public class FeedMessage extends BaseEntity{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FeedMessage that = (FeedMessage) o;
-        return Objects.equals(getTitle(), that.getTitle()) && Objects.equals(getDescription(), that.getDescription()) && Objects.equals(getLink(), that.getLink()) && Objects.equals(getAuthor(), that.getAuthor()) && Objects.equals(getGuid(), that.getGuid()) && Objects.equals(getId(), that.getId()) && Objects.equals(feed, that.feed);
+        return Objects.equals(getTitle(), that.getTitle()) && Objects.equals(getDescription(), that.getDescription()) && Objects.equals(getLink(), that.getLink()) && Objects.equals(getAuthor(), that.getAuthor()) && Objects.equals(getGuid(), that.getGuid()) && Objects.equals(getId(), that.getId()) && Objects.equals(getFeed(), that.getFeed()) && Objects.equals(getPubDate(), that.getPubDate()) && Objects.equals(getPubId(), that.getPubId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getTitle(), getDescription(), getLink(), getAuthor(), getGuid(), getId(), feed);
+        return Objects.hash(getTitle(), getDescription(), getLink(), getAuthor(), getGuid(), getId(), getFeed(), getPubDate(), getPubId());
     }
 
     @Override
     public String toString() {
         return "FeedMessage [title=" + title + ", description=" + description
                 + ", link=" + link + ", author=" + author + ", guid=" + guid
-                + "]";
+                + ", pubDate=" + pubDate + ", pubId=" + pubId  + "]";
     }
 
 }

@@ -36,11 +36,10 @@ public class RSSFeedParser  {
         }
     }
 
-    public Feed readFeed() {
+    public Feed readFeed(String pubId) {
         Feed feed = null;
         try {
             boolean isFeedHeader = true;
-            // Set header values initial to the empty string
             String description = "";
             String title = "";
             String link = "";
@@ -50,12 +49,9 @@ public class RSSFeedParser  {
             String pubdate = "";
             String guid = "";
 
-            // First create a new XMLInputFactory
             XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-            // Setup a new eventReader
             InputStream in = readUrl();
             XMLEventReader eventReader = inputFactory.createXMLEventReader(in);
-            // read the XML document
             while (eventReader.hasNext()) {
                 XMLEvent event = eventReader.nextEvent();
                 if (event.isStartElement()) {
@@ -65,10 +61,9 @@ public class RSSFeedParser  {
                         case ITEM:
                             if (isFeedHeader) {
                                 isFeedHeader = false;
-                                feed = new Feed(title, link, description, language,
+                                feed = new Feed(pubId, title, link, description, language,
                                         copyright, pubdate);
                             }
-//                            event = eventReader.nextEvent();
                             break;
                         case TITLE:
                             title = getCharacterData( eventReader);
@@ -105,10 +100,10 @@ public class RSSFeedParser  {
                         message.setGuid(guid);
                         message.setLink(link);
                         message.setTitle(title);
+                        message.setPubDate(pubdate);
+                        message.setPubId(pubId);
                         assert feed != null;
                         feed.setMessages(message);
-//                        event = eventReader.nextEvent();
-//                        continue;
                     }
                 }
             }
