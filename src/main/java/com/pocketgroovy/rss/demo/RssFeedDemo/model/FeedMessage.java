@@ -1,61 +1,65 @@
 package com.pocketgroovy.rss.demo.RssFeedDemo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.Objects;
+
 /*
  * RSS message model
  */
-public class FeedMessage {
+@Getter
+@Setter
+@Entity
+@Table(name = "feedmessage")
+public class FeedMessage extends BaseEntity{
 
-    String title;
-    String description;
-    String link;
-    String author;
-    String guid;
+    @Column(name = "title")
+    private String title;
 
-    public String getTitle() {
-        return title;
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "link")
+    private String link;
+
+    @Column(name = "author")
+    private String author;
+
+    @Column(name = "guid")
+    private String guid;
+
+    @Column(name = "pubDate")
+    private String pubDate;
+
+    @Column(name = "pubId")
+    private String pubId;
+
+    @JsonIgnore
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "feed_id")
+    private Feed feed;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FeedMessage that = (FeedMessage) o;
+        return Objects.equals(getTitle(), that.getTitle()) && Objects.equals(getDescription(), that.getDescription()) && Objects.equals(getLink(), that.getLink()) && Objects.equals(getAuthor(), that.getAuthor()) && Objects.equals(getGuid(), that.getGuid()) && Objects.equals(getId(), that.getId()) && Objects.equals(getFeed(), that.getFeed()) && Objects.equals(getPubDate(), that.getPubDate()) && Objects.equals(getPubId(), that.getPubId());
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getLink() {
-        return link;
-    }
-
-    public void setLink(String link) {
-        this.link = link;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public String getGuid() {
-        return guid;
-    }
-
-    public void setGuid(String guid) {
-        this.guid = guid;
+    @Override
+    public int hashCode() {
+        return Objects.hash(getTitle(), getDescription(), getLink(), getAuthor(), getGuid(), getId(), getFeed(), getPubDate(), getPubId());
     }
 
     @Override
     public String toString() {
         return "FeedMessage [title=" + title + ", description=" + description
                 + ", link=" + link + ", author=" + author + ", guid=" + guid
-                + "]";
+                + ", pubDate=" + pubDate + ", pubId=" + pubId  + "]";
     }
 
 }
