@@ -1,29 +1,35 @@
-SET foreign_key_checks = 0;
+--SET foreign_key_checks = 0;
+--DROP TABLE IF EXISTS feed, feedmessage;
+--SET foreign_key_checks = 1;
 
-DROP TABLE IF EXISTS FeedMessages;
 
-CREATE TABLE IF NOT EXISTS FeedMessages
+CREATE TABLE IF NOT EXISTS feed
 (
-    id   SERIAL PRIMARY KEY,
-    title VARCHAR(20),
-    description VARCHAR(20),
-    link VARCHAR(100),
-    author VARCHAR(20),
-    guid VARCHAR(20)
+    id   BIGINT PRIMARY KEY AUTO_INCREMENT,
+    pubId VARCHAR(255),
+    title VARCHAR(255),
+    link VARCHAR(255),
+    description VARCHAR(1024),
+    copyright VARCHAR(255),
+    pubDate VARCHAR(255),
+    language VARCHAR(255),
+    created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_date  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-DROP TABLE IF EXISTS Feeds;
-
-CREATE TABLE Feeds
+--
+CREATE TABLE IF NOT EXISTS feedmessage
 (
-    id   SERIAL PRIMARY KEY,
-    title VARCHAR(20),
-    link VARCHAR(100),
-    description VARCHAR(20),
-    copyright VARCHAR(100),
-    pubDate TIMESTAMP,
-    language VARCHAR(20)
---    CONSTRAINT messageId FOREIGN KEY (id) REFERENCES feedMessages(id)
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(1024),
+    description VARCHAR(1024),
+    link VARCHAR(255),
+    author VARCHAR(255),
+    guid VARCHAR(255),
+    pubDate VARCHAR(255),
+    pubId VARCHAR(255),
+    feed_id BIGINT,
+    FOREIGN KEY (feed_id) REFERENCES feed (id),
+    created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_date  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
-
-SET foreign_key_checks = 1;

@@ -2,11 +2,6 @@ package com.pocketgroovy.rss.demo.RssFeedDemo.read;
 
 import com.pocketgroovy.rss.demo.RssFeedDemo.model.Feed;
 import com.pocketgroovy.rss.demo.RssFeedDemo.model.FeedMessage;
-import org.springframework.batch.item.ItemReader;
-import org.springframework.batch.item.NonTransientResourceException;
-import org.springframework.batch.item.ParseException;
-import org.springframework.batch.item.UnexpectedInputException;
-import org.springframework.batch.item.xml.builder.StaxEventItemReaderBuilder;
 
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
@@ -19,7 +14,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Objects;
 
-//public class RSSFeedParser implements ItemReader<Feed> {
 public class RSSFeedParser  {
     static final String TITLE = "title";
     static final String DESCRIPTION = "description";
@@ -42,14 +36,10 @@ public class RSSFeedParser  {
         }
     }
 
-//    public InputStream read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
-//        return readUrl();
-//    }
-    public Feed readFeed() {
+    public Feed readFeed(String pubId) {
         Feed feed = null;
         try {
             boolean isFeedHeader = true;
-            // Set header values initial to the empty string
             String description = "";
             String title = "";
             String link = "";
@@ -59,12 +49,9 @@ public class RSSFeedParser  {
             String pubdate = "";
             String guid = "";
 
-            // First create a new XMLInputFactory
             XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-            // Setup a new eventReader
             InputStream in = readUrl();
             XMLEventReader eventReader = inputFactory.createXMLEventReader(in);
-            // read the XML document
             while (eventReader.hasNext()) {
                 XMLEvent event = eventReader.nextEvent();
                 if (event.isStartElement()) {
@@ -74,10 +61,9 @@ public class RSSFeedParser  {
                         case ITEM:
                             if (isFeedHeader) {
                                 isFeedHeader = false;
-                                feed = new Feed(title, link, description, language,
+                                feed = new Feed(pubId, title, link, description, language,
                                         copyright, pubdate);
                             }
-//                            event = eventReader.nextEvent();
                             break;
                         case TITLE:
                             title = getCharacterData( eventReader);
@@ -114,10 +100,10 @@ public class RSSFeedParser  {
                         message.setGuid(guid);
                         message.setLink(link);
                         message.setTitle(title);
+                        message.setPubDate(pubdate);
+                        message.setPubId(pubId);
                         assert feed != null;
-                        feed.getMessages().add(message);
-//                        event = eventReader.nextEvent();
-//                        continue;
+                        feed.setMessages(message);
                     }
                 }
             }
