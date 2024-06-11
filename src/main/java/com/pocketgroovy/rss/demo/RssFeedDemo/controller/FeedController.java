@@ -79,7 +79,7 @@ public class FeedController {
                                             @RequestParam(defaultValue = "1") int pageSize,
                                             @RequestParam(defaultValue = "DESC") String sortDirection,
                                             @RequestParam(defaultValue = "id") String sortBy) {
-        List<FeedDTO> feedDTOList = feedService.getAllFeedsByPubId(pubId, pageNo, pageSize, sortDirection, sortBy).stream().map(this::convertAllFeedsToDTO).collect(Collectors.toList());
+        List<FeedDTO> feedDTOList = feedService.getAllFeedsByPubId(pubId, pageNo, pageSize, sortDirection, sortBy).stream().map(this::convertAllFeedsToDTO).toList();
         if (feedDTOList.size() > 1) {
             log.warn("More results for most recent feed");
         }

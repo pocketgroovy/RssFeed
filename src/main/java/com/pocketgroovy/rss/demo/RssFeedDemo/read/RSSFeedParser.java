@@ -103,6 +103,7 @@ public class RSSFeedParser  {
                         message.setPubDate(pubdate);
                         message.setPubId(pubId);
                         assert feed != null;
+                        message.setFeed(feed);
                         feed.setMessages(message);
                     }
                 }
