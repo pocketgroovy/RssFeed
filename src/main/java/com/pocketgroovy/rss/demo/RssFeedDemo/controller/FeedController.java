@@ -3,6 +3,7 @@ package com.pocketgroovy.rss.demo.RssFeedDemo.controller;
 import com.pocketgroovy.rss.demo.RssFeedDemo.constant.Publishers;
 import com.pocketgroovy.rss.demo.RssFeedDemo.dto.FeedDTO;
 import com.pocketgroovy.rss.demo.RssFeedDemo.dto.FeedMessageDTO;
+import com.pocketgroovy.rss.demo.RssFeedDemo.exception.FeedNotFoundException;
 import com.pocketgroovy.rss.demo.RssFeedDemo.model.Feed;
 import com.pocketgroovy.rss.demo.RssFeedDemo.model.FeedMessage;
 import com.pocketgroovy.rss.demo.RssFeedDemo.read.RSSFeedParser;
@@ -78,10 +79,13 @@ public class FeedController {
     public FeedDTO getMostRecentFeedByPubId(@PathVariable String pubId, @RequestParam(defaultValue = "0") int pageNo,
                                             @RequestParam(defaultValue = "1") int pageSize,
                                             @RequestParam(defaultValue = "DESC") String sortDirection,
-                                            @RequestParam(defaultValue = "id") String sortBy) {
+                                            @RequestParam(defaultValue = "id") String sortBy) throws FeedNotFoundException {
         List<FeedDTO> feedDTOList = feedService.getAllFeedsByPubId(pubId, pageNo, pageSize, sortDirection, sortBy).stream().map(this::convertAllFeedsToDTO).toList();
         if (feedDTOList.size() > 1) {
             log.warn("More results for most recent feed");
+        } else if (feedDTOList.isEmpty()) {
+            log.warn("No feed found");
+            throw new FeedNotFoundException("No feed found");
         }
         return feedDTOList.getFirst();
     }
