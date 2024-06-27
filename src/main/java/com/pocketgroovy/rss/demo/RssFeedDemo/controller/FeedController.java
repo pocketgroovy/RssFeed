@@ -38,15 +38,6 @@ public class FeedController {
         publisherUrls = publishers.getUrl();
     }
 
-//    @GetMapping("/add_feeds")
-//    public void addFeeds() {
-//        publisherUrls.forEach((pubId, pubUrl) -> {
-//            RSSFeedParser parser = new RSSFeedParser(pubUrl);
-//            Feed feed = parser.readFeed(pubId);
-//            feedService.addFeed(feed);
-//            feedMessageService.addAllFeedMessages(feed.getMessages());
-//        });
-//    }
     @GetMapping("/add_feeds")
     public void addFeeds() {
         publisherUrls.forEach((pubId, pubUrl) -> {
