@@ -14,9 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -30,22 +28,38 @@ public class FeedController {
     private FeedMessageService feedMessageService;
     @Autowired
     private ModelMapper modelMapper;
-
+    @Autowired
     private final Publishers publishers;
+    private final Map<String, String> publisherUrls;
 
     @Autowired
     public FeedController(Publishers publishers) {
         this.publishers = publishers;
+        publisherUrls = publishers.getUrl();
     }
 
+//    @GetMapping("/add_feeds")
+//    public void addFeeds() {
+//        publisherUrls.forEach((pubId, pubUrl) -> {
+//            RSSFeedParser parser = new RSSFeedParser(pubUrl);
+//            Feed feed = parser.readFeed(pubId);
+//            feedService.addFeed(feed);
+//            feedMessageService.addAllFeedMessages(feed.getMessages());
+//        });
+//    }
     @GetMapping("/add_feeds")
     public void addFeeds() {
-        Map<String, String> publisherUrls = publishers.getUrl();
         publisherUrls.forEach((pubId, pubUrl) -> {
             RSSFeedParser parser = new RSSFeedParser(pubUrl);
             Feed feed = parser.readFeed(pubId);
-            feedService.addFeed(feed);
-            feedMessageService.addAllFeedMessages(feed.getMessages());
+            List<FeedMessage> onlyNewMessages = listUpOnlyNewMessages(feed.getMessages(), pubId);
+            if(!onlyNewMessages.isEmpty()) {
+                feedService.addFeed(feed);
+                feedMessageService.addAllFeedMessages(onlyNewMessages);
+            }
+            else{
+                log.info("no new message found");
+            }
         });
     }
 
@@ -97,6 +111,21 @@ public class FeedController {
                                             @RequestParam(defaultValue = "DESC") String sortDirection,
                                             @RequestParam(defaultValue = "id") String sortBy) {
         return feedService.getAllFeedsByPubId(pubId, pageNo, pageSize, sortDirection, sortBy).stream().map(this::convertAllFeedsToDTO).collect(Collectors.toList());
+    }
+
+    private List<FeedMessage> listUpOnlyNewMessages(List<FeedMessage> messageList, String pibId){
+            List<FeedMessage> feedMessages = feedMessageService.getFeedMessagesListByFeedId(Long.parseLong(pibId), 0, 200,"DESC", "id");
+            Set<FeedMessage> allNewElements = new HashSet<>();
+            if(!feedMessages.isEmpty()) {
+                for (FeedMessage message : messageList) {
+                    boolean bool = feedMessages.contains(message);
+                    if (!feedMessages.contains(message)) {
+                        allNewElements.add(message);
+                    }
+                }
+                return new ArrayList<>(allNewElements);
+            }
+            return messageList;
     }
 
     private FeedDTO convertFeedToDTO(Optional<Feed> feed) {

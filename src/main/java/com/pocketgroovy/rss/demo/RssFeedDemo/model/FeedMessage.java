@@ -47,19 +47,19 @@ public class FeedMessage extends BaseEntity{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FeedMessage that = (FeedMessage) o;
-        return Objects.equals(getTitle(), that.getTitle()) && Objects.equals(getDescription(), that.getDescription()) && Objects.equals(getLink(), that.getLink()) && Objects.equals(getAuthor(), that.getAuthor()) && Objects.equals(getGuid(), that.getGuid()) && Objects.equals(getId(), that.getId()) && Objects.equals(getFeed(), that.getFeed()) && Objects.equals(getPubDate(), that.getPubDate()) && Objects.equals(getPubId(), that.getPubId()) && Objects.equals(getFeed().getId(), that.getFeed().getId());
+        return Objects.equals(getTitle(), that.getTitle()) && Objects.equals(getDescription(), that.getDescription()) && Objects.equals(getLink(), that.getLink()) && Objects.equals(getAuthor(), that.getAuthor()) && Objects.equals(getGuid(), that.getGuid()) && Objects.equals(getPubDate(), that.getPubDate()) && Objects.equals(getPubId(), that.getPubId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getTitle(), getDescription(), getLink(), getAuthor(), getGuid(), getId(), getFeed(), getPubDate(), getPubId(), getFeed().getId());
+        return Objects.hash(getTitle(), getDescription(), getLink(), getAuthor(), getGuid(), getPubDate(), getPubId());
     }
 
     @Override
     public String toString() {
         return "FeedMessage [title=" + title + ", description=" + description
                 + ", link=" + link + ", author=" + author + ", guid=" + guid
-                + ", pubDate=" + pubDate + ", pubId=" + pubId + " feed_id=" + feed.getId() + "]" ;
+                + ", pubDate=" + pubDate + ", pubId=" + pubId +  "]" ;
     }
 
 }
